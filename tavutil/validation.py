@@ -3,6 +3,7 @@
 
 """Service input validation support."""
 
+from __future__ import absolute_import
 from time import time
 from sha import new as sha1
 
@@ -25,10 +26,10 @@ def validate(**spec):
         rkey = sha1(str(time())).hexdigest()[:7]
         rkw = 'kw_%s' % rkey
 
-        code = func.func_code
+        code = func.__code__
         varnames = list(code.co_varnames)
-        defaults = func.func_defaults or ()
-        func_name = func.func_name
+        defaults = func.__defaults__ or ()
+        func_name = func.__name__
 
         varargs = varkwargs = None
 
@@ -83,7 +84,7 @@ def %(func_name)s(%(params)s):
             'defaults_%s' % rkey: defaults,
             'ValueError': ValueError
             }
-        exec source in env
+        exec(source, env)
 
         return env[func_name]
 

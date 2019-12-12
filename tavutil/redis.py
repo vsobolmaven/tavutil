@@ -1,6 +1,8 @@
 # Public Domain (-) 2010-2011 The Tavutil Authors.
 # See the Tavutil UNLICENSE file for details.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import logging
 import socket
 
@@ -11,6 +13,7 @@ from tavutil.async import wrap_method
 
 from tornado.ioloop import IOLoop
 from tornado.iostream import IOStream
+from six.moves import range
 
 # ------------------------------------------------------------------------------
 # Some Constants
@@ -329,7 +332,7 @@ if __name__ == '__main__':
 
     redis = constructor()
     def handle_get(result):
-        print "GOT:", result
+        print("GOT:", result)
 
     redis.set('name', 'tav', run=1)
     redis.get('name')(handle_get)
@@ -343,25 +346,25 @@ if __name__ == '__main__':
         x = yield redis.send_request('set', 'foo', i)
         yield redis.multi()
         x = yield redis.set('foo', i)
-        print x
+        print(x)
         try:
             x = yield redis.get('foo', i)
-        except Exception, error:
-            print "aaas", error
+        except Exception as error:
+            print("aaas", error)
         x = yield redis.incr('foos')
-        print x
+        print(x)
         x = yield redis.incr('foo')
-        print repr(x)
+        print(repr(x))
         x = yield redis.execute()
-        print repr(x)
+        print(repr(x))
         return
         try:
             x = yield redis.send_request('ping')
-        except Exception, error:
-            print 'got error', repr(error), "fa"
+        except Exception as error:
+            print('got error', repr(error), "fa")
             return
         # x = yield redis.ping()
-        print x
+        print(x)
         #_ = yield redis.set('foo', i)
         # print _, i
 
@@ -369,30 +372,30 @@ if __name__ == '__main__':
     def test_get():
         redis = constructor()
         result = yield redis.send_request('get', 'foo')
-        print "Got:", result
+        print("Got:", result)
 
     def test_monitor():
         def handle_monitor_line(line):
-            print "mon", line
+            print("mon", line)
         redis = constructor()
         redis.monitor()(handle_monitor_line)
 
     test_monitor()
 
-    for i in xrange(N):
+    for i in range(N):
         test_set(i)
     else:
-        print 'get'
+        print('get')
         test_get()
 
     def print_max():
-        print Redis._opened
+        print(Redis._opened)
         Loop.add_timeout(time() + 1, print_max)
 
     print_max()
 
     def on_event(result):
-        print "GOT!!", result
+        print("GOT!!", result)
 
     r = constructor()
     r.blpop('hmz')(callback=on_event)

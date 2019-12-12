@@ -52,6 +52,7 @@ Output could be optionally rendered in HTML too:
 
 """
 
+from __future__ import absolute_import
 import sys
 import cgi
 import linecache

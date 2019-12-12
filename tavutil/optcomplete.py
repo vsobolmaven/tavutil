@@ -54,6 +54,8 @@ with optcomplete (see http://furius.ca/optcomplete for more details).
 
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 __version__ = "$Revision$"
 __author__ = "Martin Blais <blais@furius.ca>"
 
@@ -137,11 +139,11 @@ class RegexCompleter:
     def __init__(self, regexlist, always_dirs=True):
         self.always_dirs = always_dirs
 
-        if isinstance(regexlist, types.StringType):
+        if isinstance(regexlist, bytes):
             regexlist = [regexlist]
         self.regexlist = []
         for r in regexlist:
-            if isinstance(r, types.StringType):
+            if isinstance(r, bytes):
                 r = re.compile(r)
             self.regexlist.append(r)
 
@@ -252,7 +254,7 @@ def autocomplete(parser,
 
     # zsh's bashcompinit does not pass COMP_WORDS, replace with
     # COMP_LINE for now...
-    if not os.environ.has_key('COMP_WORDS'):
+    if 'COMP_WORDS' not in os.environ:
         os.environ['COMP_WORDS'] = os.environ['COMP_LINE']
 
     cwords = os.environ['COMP_WORDS'].split()
@@ -264,11 +266,11 @@ def autocomplete(parser,
     # If requested, try subcommand syntax to find an options parser for that
     # subcommand.
     if subcommands:
-        assert isinstance(subcommands, types.DictType)
+        assert isinstance(subcommands, dict)
         value = guess_first_nonoption(parser, subcommands)
         if value:
-            if isinstance(value, types.ListType) or \
-               isinstance(value, types.TupleType):
+            if isinstance(value, list) or \
+               isinstance(value, tuple):
                 parser = value[0]
                 if len(value) > 1 and value[1]:
                     # override completer for command if it is present.
@@ -328,17 +330,17 @@ def autocomplete(parser,
 
     # Options completion.
     if not optarg and (not prefix or prefix.startswith('-')):
-        completions += parser._short_opt.keys()
-        completions += parser._long_opt.keys()
+        completions += list(parser._short_opt.keys())
+        completions += list(parser._long_opt.keys())
         # Note: this will get filtered properly below.
 
     # File completion.
     if completer and (not prefix or not prefix.startswith('-')):
 
         # Call appropriate completer depending on type.
-        if isinstance(completer, types.StringType) or \
-               isinstance(completer, types.ListType) or \
-               isinstance(completer, types.TupleType):
+        if isinstance(completer, bytes) or \
+               isinstance(completer, list) or \
+               isinstance(completer, tuple):
 
             completer = RegexCompleter(completer)
             completions += completer(os.getcwd(), cline, cpoint, prefix, suffix)
@@ -346,32 +348,32 @@ def autocomplete(parser,
 
         elif isinstance(completer, types.FunctionType) or \
              isinstance(completer, types.LambdaType) or \
-             isinstance(completer, types.ClassType) or \
-             isinstance(completer, types.ObjectType):
+             isinstance(completer, type) or \
+             isinstance(completer, object):
             completions += completer(os.getcwd(), cline, cpoint, prefix, suffix)
 
     # Filter using prefix.
     if prefix:
-        completions = filter(lambda x: x.startswith(prefix), completions)
+        completions = [x for x in completions if x.startswith(prefix)]
 
     # Print result.
-    print(' '.join(completions))
+    print((' '.join(completions)))
 
     # Print debug output (if needed).  You can keep a shell with 'tail -f' to
     # the log file to monitor what is happening.
     if debugfn:
         f = open(debugfn, 'a')
-        print >> f, '---------------------------------------------------------'
-        print >> f, 'CWORDS', cwords
-        print >> f, 'CLINE', cline
-        print >> f, 'CPOINT', cpoint
-        print >> f, 'CWORD', cword
-        print >> f, '\nShort options'
-        print >> f, pformat(parser._short_opt)
-        print >> f, '\nLong options'
-        print >> f, pformat(parser._long_opt)
-        print >> f, 'Prefix/Suffix:', prefix, suffix
-        print >> f, 'completions', completions
+        print('---------------------------------------------------------', file=f)
+        print('CWORDS', cwords, file=f)
+        print('CLINE', cline, file=f)
+        print('CPOINT', cpoint, file=f)
+        print('CWORD', cword, file=f)
+        print('\nShort options', file=f)
+        print(pformat(parser._short_opt), file=f)
+        print('\nLong options', file=f)
+        print(pformat(parser._long_opt), file=f)
+        print('Prefix/Suffix:', prefix, suffix, file=f)
+        print('completions', completions, file=f)
         f.close()
 
     # Exit with error code (we do not let the caller continue on purpose, this

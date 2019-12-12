@@ -1,6 +1,7 @@
 # Public Domain (-) 2010-2011 The Tavutil Authors.
 # See the Tavutil UNLICENSE file for details.
 
+from __future__ import absolute_import
 from tavutil.paypalx import AdaptivePayment, PayRequest
 from config import (
     PPX_API_USERNAME, PPX_API_PASSWORD, 

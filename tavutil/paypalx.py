@@ -3,8 +3,10 @@
 
 """Paypal Adaptive Payments API."""
 
+from __future__ import absolute_import
 from demjson import decode as json_decode, encode as json_encode
-from urllib2 import urlopen, Request as http_request, URLError
+from six.moves.urllib.request import urlopen, Request as http_request
+from six.moves.urllib.error import URLError
 
 # Generic constants
 PRODUCTION_ENDPOINT = 'https://svcs.paypal.com/AdaptivePayments'

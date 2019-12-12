@@ -3,9 +3,11 @@
 
 """I/O Helper Utilities."""
 
+from __future__ import absolute_import
 import sys
 
 from textwrap import TextWrapper
+from six.moves import input
 
 try:
     from cStringIO import StringIO
@@ -79,7 +81,7 @@ def print_query(
     text, default, extra='', options=[], width=80, pad=4,
     col1='darkgrey', col2='red'
     ):
-    return raw_input(
+    return input(
         print_message('%s ' % text, width, pad, col1, col2, footer='') + 
         extra + 
         print_text(col2, '\n    [') +
@@ -132,4 +134,4 @@ class IteratorParser:
         if self._store:
             return self._store.pop()
         else:
-            return self.sequence.next()
+            return next(self.sequence)

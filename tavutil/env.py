@@ -3,6 +3,7 @@
 
 """Utility functions for dealing with the operating environment."""
 
+from __future__ import absolute_import
 import sys
 import subprocess
 

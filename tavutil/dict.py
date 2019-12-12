@@ -2,6 +2,7 @@
 # See the Tavutil UNLICENSE file for details.
 
 """Dictionary Subclasses and Functions."""
+import six
 
 # ------------------------------------------------------------------------------
 # CachingDict
@@ -33,7 +34,7 @@ class CachingDict(dict):
         for key, value in args:
             self.__setitem__(key, value)
 
-        for key, value in kwargs.iteritems():
+        for key, value in six.iteritems(kwargs):
             self.__setitem__(key, value)
 
     def __setitem__(self, key, value):

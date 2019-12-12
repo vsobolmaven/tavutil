@@ -43,7 +43,10 @@ The method returns ``None`` for non-Teredo addresses:
 
 """
 
+from __future__ import absolute_import
 from ipaddr import IPv6Address as UtilityClass
+import six
+from six.moves import range
 
 # ------------------------------------------------------------------------------
 # Helper Objects
@@ -63,7 +66,7 @@ class IPv4(long):
     ip_str = None
     max_ip = (2 ** 32) - 1
 
-    def __new__(klass, ip, int_types=(int, long)):
+    def __new__(klass, ip, int_types=six.integer_types):
         if isinstance(ip, int_types):
             if not 0 <= ip <= klass.max_ip:
                 raise InvalidIPAddress(ip)
@@ -103,14 +106,14 @@ class IPv6(long):
     ip_str = None
     max_ip = (2 ** 128) - 1
 
-    def __new__(klass, ip, int_types=(int, long)):
+    def __new__(klass, ip, int_types=six.integer_types):
 
         if isinstance(ip, int_types):
             if not 0 <= ip <= klass.max_ip:
                 raise InvalidIPAddress(ip)
             return super(IPv6, klass).__new__(klass, ip)
 
-        if not isinstance(ip, basestring):
+        if not isinstance(ip, six.string_types):
             raise InvalidIPAddress(ip)
 
         if ip.count('.') == 3:

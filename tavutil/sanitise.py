@@ -37,9 +37,12 @@ from a wide range of XSS attacks:
 
 # See http://ha.ckers.org/xss.html for a listing of various XSS attacks
 
+from __future__ import absolute_import
 import re
 
 from BeautifulSoup import BeautifulSoup, CData, Comment, ProcessingInstruction
+import six
+from six.moves import range
 
 # ------------------------------------------------------------------------------
 # Utility Functions
@@ -314,7 +317,7 @@ def sanitise(
                     if prop not in valid_css_properties:
                         continue
                     components = []; add_component = components.append
-                    segments = filter(None, value.split(u','))
+                    segments = [_f for _f in value.split(u',') if _f]
                     segcount = len(segments) - 1
                     for idx, segment in enumerate(segments):
                         current = None
@@ -391,14 +394,14 @@ def sanitise(
 
     if not second_run:
         return sanitise(
-            unicode(soup.renderContents(), encoding), valid_tags, valid_attrs,
+            six.text_type(soup.renderContents(), encoding), valid_tags, valid_attrs,
             valid_attr_prefixes, attrs_with_uri_refs, valid_css_properties,
             valid_css_keywords, valid_css_classes, secure_id_prefix,
             strip_cdata, strip_comments, strip_pi, rel_whitelist, True,
             allow_relative_urls, encoding
             )
 
-    return unicode(soup.renderContents(), encoding)
+    return six.text_type(soup.renderContents(), encoding)
 
 # ------------------------------------------------------------------------------
 # Run Tests

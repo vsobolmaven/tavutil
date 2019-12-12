@@ -112,12 +112,14 @@ last line in a module needing optimisation.
 
 """
 
-import __builtin__
+from __future__ import absolute_import
+import six.moves.builtins
 import logging
 import sys
 
 from opcode import opmap, HAVE_ARGUMENT, EXTENDED_ARG
 from types import FunctionType, ClassType, CodeType
+from six.moves import map
 
 # ------------------------------------------------------------------------------
 # some konstants
@@ -136,8 +138,8 @@ def _make_constants(
             "# OPTIMISING : %s.%s", function.__module__, function.__name__
             )
 
-    co = function.func_code
-    newcode = map(ord, co.co_code)
+    co = function.__code__
+    newcode = list(map(ord, co.co_code))
     newconsts = list(co.co_consts)
     names = co.co_names
     codelen = len(newcode)
@@ -149,9 +151,9 @@ def _make_constants(
 
     if builtin_only:
         stoplist = dict.fromkeys(stoplist)
-        stoplist.update(function.func_globals)
+        stoplist.update(function.__globals__)
     else:
-        env.update(function.func_globals)
+        env.update(function.__globals__)
 
     # first pass converts global lookups into constants
 
@@ -250,8 +252,8 @@ def _make_constants(
         )
 
     return FunctionType(
-        codeobj, function.func_globals, function.func_name,
-        function.func_defaults, function.func_closure
+        codeobj, function.__globals__, function.__name__,
+        function.__defaults__, function.__closure__
         )
 
 _make_constants = _make_constants(_make_constants) # optimise thyself!

@@ -3,12 +3,15 @@
 
 """Miscellaneous utility crypto functions."""
 
+from __future__ import absolute_import
 from base64 import b64encode, b32encode
 from hmac import HMAC
 from hashlib import sha384
 from os import urandom
 from time import time
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
+import six
+from six.moves import zip
 
 # ------------------------------------------------------------------------------
 # http://rdist.root.org/2009/05/28/timing-attack-in-google-keyczar-library/
@@ -43,10 +46,10 @@ def create_tamper_proof_string(
     ):
     """Return a tamper proof version of the passed in string value."""
 
-    if not isinstance(name, basestring):
+    if not isinstance(name, six.string_types):
         raise ValueError("You can only tamper-proof str name/values.")
 
-    if not isinstance(value, basestring):
+    if not isinstance(value, six.string_types):
         raise ValueError("You can only tamper-proof str name/values.")
 
     if duration:
@@ -65,10 +68,10 @@ def validate_tamper_proof_string(
     ):
     """Validate that the given value hasn't been tampered with."""
 
-    if not isinstance(name, basestring):
+    if not isinstance(name, six.string_types):
         raise ValueError("You can only tamper-proof str name/values.")
 
-    if not isinstance(value, basestring):
+    if not isinstance(value, six.string_types):
         raise ValueError("You can only tamper-proof str name/values.")
 
     try:

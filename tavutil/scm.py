@@ -3,6 +3,8 @@
 
 """Utility functions to help with detecting the SCM system being used."""
 
+from __future__ import absolute_import
+from __future__ import print_function
 from os.path import abspath, isdir
 from tavutil.env import run_command, CommandNotFound
 
@@ -141,4 +143,4 @@ class SCMConfig(SCMBase):
 
 
 if __name__ == '__main__':
-    print guess('hg')
+    print(guess('hg'))

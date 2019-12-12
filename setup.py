@@ -3,6 +3,7 @@
 # Public Domain (-) 2010-2014 The Tavutil Authors.
 # See the Tavutil UNLICENSE file for details.
 
+from __future__ import absolute_import
 import os
 import sys
 
@@ -47,7 +48,9 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: C",
         "Programming Language :: Cython",
-        "Programming Language :: Python"
+        "Programming Language :: Python",
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.8',
         ],
     cmdclass=dict(build_ext=build_ext),
     description="A collection of utility modules",
