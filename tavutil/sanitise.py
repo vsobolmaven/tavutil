@@ -40,7 +40,7 @@ from a wide range of XSS attacks:
 from __future__ import absolute_import
 import re
 
-from BeautifulSoup import BeautifulSoup, CData, Comment, ProcessingInstruction
+from bs4 import BeautifulSoup, CData, Comment, ProcessingInstruction
 import six
 from six.moves import range
 

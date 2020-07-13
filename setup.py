@@ -56,7 +56,7 @@ setup(
     description="A collection of utility modules",
     ext_modules=extensions,
     install_requires=[
-        "BeautifulSoup>=3.2.0",
+        "beautifulsoup4>=4.9.1",
         "ipaddr>=2.1.7",
         "tornado>=1.2.1"
         ],
